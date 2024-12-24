@@ -1,1 +1,0 @@
-Seyed Amirhossein Mousavi
