@@ -201,7 +201,6 @@ def main():
         else:
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
             Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
-
-# Run the program
+            
 if __name__ == "__main__":
     main()
