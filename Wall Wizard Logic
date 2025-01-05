@@ -1,0 +1,76 @@
+import os
+
+# Constants
+BOARD_SIZE = 17
+# Time limit for each player's turn in seconds
+TURN_TIME_LIMIT = 30
+
+# Utility functions
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def create_board():
+    board = []
+    for row in range(BOARD_SIZE):
+        line = []
+        for col in range(BOARD_SIZE):
+            if row % 2 == 0 and col % 2 == 0:
+                line.append(".")  # Playable spaces
+            elif row % 2 == 1 and col % 2 == 1:
+                line.append("+")  # Intersection points for walls
+            else:
+                line.append("#")  # Wall spaces
+        board.append(line)
+    return board
+
+def display_board(board):
+    clear_console()
+    for row in board:
+        print(" ".join(row))
+    print("\n")
+
+class Player:
+    def __init__(self, name, start_position, symbol):
+        self.name = name
+        self.position = start_position
+        self.symbol = symbol
+        self.walls_left = 10
+
+class QuoridorGame:
+    def __init__(self):
+        self.board = create_board()
+        self.players = []
+        self.current_turn = 0
+        self.walls = set()
+
+    def add_player(self, name, start_position, symbol):
+        player = Player(name, start_position, symbol)
+        self.players.append(player)
+        x, y = start_position
+        self.board[x][y] = symbol
+
+    def move_player(self, player_name, direction):
+        player = next(p for p in self.players if p.name == player_name)
+        x, y = player.position
+
+        if direction == 'w':
+            new_position = (x - 2, y)
+        elif direction == 's':
+            new_position = (x + 2, y)
+        elif direction == 'a':
+            new_position = (x, y - 2)
+        elif direction == 'd':
+            new_position = (x, y + 2)
+        else:
+            print("Invalid direction! Use 'w', 'a', 's', or 'd'.")
+            return False
+
+        if self.is_valid_move(player, new_position):
+            nx, ny = new_position
+            self.board[x][y] = "."
+            self.board[nx][ny] = player.symbol
+            player.position = new_position
+            return True
+
+        print("Invalid move! Try again.")
+        return False
