@@ -74,3 +74,71 @@ class QuoridorGame:
 
         print("Invalid move! Try again.")
         return False
+
+    def is_valid_move(self, player, new_position):
+        x, y = player.position
+        nx, ny = new_position
+
+        # Check boundaries
+        if not (0 <= nx < BOARD_SIZE and 0 <= ny < BOARD_SIZE):
+            return False
+
+        # Ensure the cell is empty
+        if self.board[nx][ny] != ".":
+            return False
+
+        # Check for valid two-step moves
+        if abs(nx - x) + abs(ny - y) == 2:
+            return True
+
+        # Check for jumping over an opponent
+        for opponent in self.players:
+            if opponent != player and opponent.position == ((x + nx) // 2, (y + ny) // 2):
+                mid_x, mid_y = opponent.position
+                if self.board[nx][ny] == ".":
+                    return True
+
+                # Check diagonal moves if jumping forward is blocked
+                for dx, dy in [(-2, -2), (-2, 2), (2, -2), (2, 2)]:
+                    diag_x, diag_y = x + dx, y + dy
+                    if 0 <= diag_x < BOARD_SIZE and 0 <= diag_y < BOARD_SIZE:
+                        if self.board[diag_x][diag_y] == ".":
+                            return True
+
+        return False
+
+    def place_wall(self, player_name, wall_position, orientation):
+        player = next(p for p in self.players if p.name == player_name)
+        grid_x, grid_y = wall_position
+
+        x = grid_x * 2
+        y = grid_y * 2
+
+        if player.walls_left <= 0:
+            print("No walls left to place!")
+            return False
+
+        if self.is_valid_wall((x, y), orientation):
+            if orientation == 'h':
+                if y + 3 < BOARD_SIZE:
+                    self.board[x][y - 1] = "═"
+                    self.board[x][y] = "═"
+                    self.board[x][y + 1] = "═"
+                else:
+                    print("Invalid wall placement! Out of bounds.")
+                    return False
+            elif orientation == 'v':
+                if x + 3 < BOARD_SIZE:
+                    self.board[x - 1][y] = "║"
+                    self.board[x][y] = "║"
+                    self.board[x + 1][y] = "║"
+                else:
+                    print("Invalid wall placement! Out of bounds.")
+                    return False
+
+            self.walls.add((x, y, orientation))
+            player.walls_left -= 1
+            return True
+
+        print("Invalid wall placement! Try again.")
+        return False
