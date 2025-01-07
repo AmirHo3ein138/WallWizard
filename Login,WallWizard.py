@@ -8,20 +8,16 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
 
-# Initialize rich console for beautiful terminal output
 console = Console()
 
-# Function to clear the terminal screen
 def clear_screen():
     if os.name == 'nt':
         os.system('cls')
 
-# Function to validate email format
 def validate_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_regex, email) is not None
 
-# Function to load users from the JSON file
 def load_users():
     try:
         with open("users.json", "r") as file:
@@ -29,12 +25,10 @@ def load_users():
     except FileNotFoundError:
         return {}
 
-# Function to save users to the JSON file
 def save_users(users):
     with open("users.json", "w") as file:
         json.dump(users, file, indent=4)
 
-# Function to display login menu in a table
 def display_login_table():
     table = Table(title="[bold magenta]==| Login Menu |==[/bold magenta]")
     table.add_column("Field", style="bold magenta", justify="center")
@@ -53,7 +47,6 @@ def display_entry_table():
     table.add_row("3", "Exit")
     console.print(table)
 
-# Function to display registration fields in a table
 def display_signin_table():
     table = Table(title="[bold blue]==|Terms|==[/bold blue]", show_header=True, header_style="bold blue", padding=(0, 2))
     table.add_column("Field", style="bold blue", justify="center")
@@ -62,8 +55,7 @@ def display_signin_table():
     table.add_row("Email", "Valid email address")
     table.add_row("Password", "Password must be at least 8 characters long")
     console.print(table)
-
-# Function to display main menu in a table
+    
 def display_main_menu_table():
     table = Table(title="[bold cyan]Main Menu[/bold cyan]", show_header=True, header_style="bold yellow", padding=(0, 2))
     table.add_column("Option", style="bold cyan", justify="center")
@@ -75,16 +67,15 @@ def display_main_menu_table():
     table.add_row("5", "Exit")
     console.print(table)
 
-# Function to get password input with stars characters
 def get_password(prompt):
     console.print(prompt, end='', style="bold blue")
     password = ""
     while True:
         char = msvcrt.getch()
-        if char == b'\r':  # Enter key
+        if char == b'\r':
             print()
             break
-        elif char == b'\x08':  # Backspace key
+        elif char == b'\x08':
             if len(password) > 0:
                 password = password[:-1]
                 print("\b \b", end='', flush=True)
@@ -93,7 +84,6 @@ def get_password(prompt):
             print("*", end='', flush=True)
     return password
 
-# Function to register a new user
 def register_user():
     users = load_users()
 
@@ -102,7 +92,7 @@ def register_user():
         username = Prompt.ask("[bold blue]Enter username (or b to go back)[/bold blue]", default="", show_default=False)
         if username == 'b':
             clear_screen()
-            return  # Go back to the main menu
+            return
         if username in users:
             console.print("Error: Username already exists.", style="bold underline red", justify="center")
             continue
@@ -110,7 +100,7 @@ def register_user():
         email = Prompt.ask("[bold blue]Enter email (or b to go back)[/bold blue]", default="", show_default=False)
         if email == 'b':
             clear_screen()
-            return  # Go back to the main menu
+            return
         if not validate_email(email):
             console.print("Error: Invalid email format.", style="bold underline red", justify="center")
             continue
@@ -122,7 +112,7 @@ def register_user():
             password = get_password("Enter password (more than 8 characters, or b to go back): ")
             if password == 'b':
                 clear_screen()
-                return  # Go back to the main menu
+                return
             if len(password) < 8:
                 console.print("Error: Password must be at least 8 characters.", style="bold underline red", justify="center")
                 continue
@@ -134,7 +124,7 @@ def register_user():
             break
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_id = str(uuid.uuid4())  # Generate a unique user ID
+        user_id = str(uuid.uuid4())
         users[user_id] = {
             "username": username,
             "password": hashed_password.decode('utf-8'),
@@ -147,7 +137,6 @@ def register_user():
         clear_screen()
         break
 
-# Function to login a user
 def login_user():
     display_login_table()
     users = load_users()
@@ -156,7 +145,7 @@ def login_user():
         username = Prompt.ask("[bold magenta]Enter username (or b to go back)[/bold magenta]", default="", show_default=False)
         if username == 'b':
             clear_screen()
-            return  # Go back to the main menu
+            return
         user = None
         for user_id, data in users.items():
             if data["username"] == username:
@@ -170,7 +159,7 @@ def login_user():
         password = get_password("Enter password (or b to go back): ")
         if password == 'b':
             clear_screen()
-            return  # Go back to the main menu
+            return
         if not bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
             console.print("Error: Incorrect password.", style="bold underline red", justify="center")
             continue
@@ -181,7 +170,6 @@ def login_user():
         main_menu(username)
         break
 
-# Function to display the main menu
 def main_menu(username):
     while True:
         clear_screen()
@@ -199,7 +187,6 @@ def main_menu(username):
         else:
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
 
-# Main entry point
 def main():
     while True:
         clear_screen()
@@ -218,6 +205,5 @@ def main():
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
             Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
 
-# Run the program
 if __name__ == "__main__":
     main()
