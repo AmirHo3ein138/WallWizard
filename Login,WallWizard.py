@@ -3,7 +3,7 @@ import bcrypt
 import re
 import json
 import os
-import getpass
+import msvcrt
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
@@ -29,23 +29,10 @@ def load_users():
     except FileNotFoundError:
         return {}
 
-# Function to load game history
-def load_game_history():
-    try:
-        with open("games.json", "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-
 # Function to save users to the JSON file
 def save_users(users):
     with open("users.json", "w") as file:
         json.dump(users, file, indent=4)
-
-# Function to save game history
-def save_game_history(games):
-    with open("games.json", "w") as file:
-        json.dump(games, file, indent=4)
 
 # Function to display login menu in a table
 def display_login_table():
@@ -56,6 +43,7 @@ def display_login_table():
     table.add_row("Email", "Valid email address")
     table.add_row("Password", "Password must be at least 8 characters long")
     console.print(table)
+
 def display_entry_table():
     table = Table(title="[bold cyan]==| Entry Menu |==[/bold cyan]", show_header=True, header_style="bold cyan", padding=(0, 2))
     table.add_column("Option", style="bold cyan", justify="center")
@@ -87,6 +75,24 @@ def display_main_menu_table():
     table.add_row("5", "Exit")
     console.print(table)
 
+# Function to get password input with stars characters
+def get_password(prompt):
+    console.print(prompt, end='', style="bold blue")
+    password = ""
+    while True:
+        char = msvcrt.getch()
+        if char == b'\r':  # Enter key
+            print()
+            break
+        elif char == b'\x08':  # Backspace key
+            if len(password) > 0:
+                password = password[:-1]
+                print("\b \b", end='', flush=True)
+        else:
+            password += char.decode('utf-8')
+            print("*", end='', flush=True)
+    return password
+
 # Function to register a new user
 def register_user():
     users = load_users()
@@ -113,7 +119,7 @@ def register_user():
             continue
 
         while True:
-            password = getpass.getpass("Enter password (more than 8 characters, or b to go back):")
+            password = get_password("Enter password (more than 8 characters, or b to go back): ")
             if password == 'b':
                 clear_screen()
                 return  # Go back to the main menu
@@ -121,7 +127,7 @@ def register_user():
                 console.print("Error: Password must be at least 8 characters.", style="bold underline red", justify="center")
                 continue
 
-            password_confirm = getpass.getpass("Confirm password: ")
+            password_confirm = get_password("Confirm password: ")
             if password != password_confirm:
                 console.print("Error: Passwords do not match. Please try again.", style="bold underline red", justify="center")
                 continue
@@ -161,7 +167,7 @@ def login_user():
             console.print("Error: Username does not exist.", style="bold underline red", justify="center")
             continue
 
-        password = getpass.getpass("Enter password (or b to go back): ")
+        password = get_password("Enter password (or b to go back): ")
         if password == 'b':
             clear_screen()
             return  # Go back to the main menu
@@ -183,11 +189,11 @@ def main_menu(username):
 
         choice = Prompt.ask("[bold yellow]Enter choice[/bold yellow]", default="", show_default=False)
         if choice == '1':
-            start_new_game(username)
+            console.print("Starting new game...", style="bold green")
         elif choice == '2':
-            view_game_history()
+            console.print("Viewing game history...", style="bold green")
         elif choice == '3':
-            view_leaderboard()
+            console.print("Viewing leaderboard...", style="bold green")
         elif choice == '4':
             break
         else:
