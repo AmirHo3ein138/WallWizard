@@ -136,7 +136,7 @@ def register_user():
         }
 
         save_users(users)
-        console.print("Registration successful!", style="bold underline green", justify="center")
+        console.print("Everything is set to play!", style="bold underline green", justify="center")
         Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
         clear_screen()
         break
