@@ -185,12 +185,10 @@ def main_menu(username):
         if choice == '1':
             start_new_game(username)
         elif choice == '2':
-            continue_game()
-        elif choice == '3':
             view_game_history()
-        elif choice == '4':
+        elif choice == '3':
             view_leaderboard()
-        elif choice == '5':
+        elif choice == '4':
             break
         else:
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
