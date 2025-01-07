@@ -37,6 +37,13 @@ def dfsFunction(x,y,a,p):
         return(False)
     else:
         return(True)
+
+v_wall = 0
+h_wall = 0
+v_path = '\u2506'
+h_path = '\u2508'
+hashtag = '\u2541'
+plus = '\u2543'
 a=[]
 for i in range(17):
     a.append([])
@@ -45,12 +52,12 @@ for i in range(17):
         for j in range(9):
             a[i].append(" ")
             if j<8:
-                a[i].append(" | ")
+                a[i].append(" "+v_path+" ")
     else:
         for j in range(9):
-            a[i].append("---")
+            a[i].append(3 * h_path)
             if j<8:
-                a[i].append("+")
+                a[i].append("" + plus + "")
 move="t"
 x=9
 y=0
