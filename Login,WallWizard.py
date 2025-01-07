@@ -6,7 +6,6 @@ import os
 import getpass
 from rich.console import Console
 from rich.prompt import Prompt
-from rich.panel import Panel
 from rich.table import Table
 
 # Initialize rich console for beautiful terminal output
