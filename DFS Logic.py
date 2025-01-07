@@ -51,7 +51,7 @@ for i in range(17):
             a[i].append("---")
             if j<8:
                 a[i].append("+")
-p="t"
+move="t"
 x=9
 y=0
 a[y][x]="x"
@@ -61,56 +61,64 @@ f=16
 a[f][g]="o"
 w1=10
 ply=1
-while p!="n":
+while move!="n":
     for i in range(17):
         c=""
         for j in range(17):
             c+=a[i][j]
+        if i%2==0:
+            c+=a[i][17]
         print(c)
     ctr=0
-    p=input("Do your move(w, a, s, d or p for place wall) : ")
+    move=input("Do your move(w, a, s, d or p for place wall) : ")
     if ply==2:
-        if p=="w" and y>0 and a[y-1][x-1]!="===":
+        if move=="w" and y>0 and a[y-1][x-1]!="===":
             a[y][x]=" "
             y-=2
             ctr=1
-        elif p=="s" and y<16 and a[y+1][x-1]!="===":
+        elif move=="s" and y<16 and a[y+1][x-1]!="===":
             a[y][x]=" "
             y+=2
             ctr=1
-        elif p=="a" and x>1 and a[y][x-1]!="|||":
+        elif move=="a" and x>1 and a[y][x-1]!="|||":
             a[y][x]=" "
             x-=2
             ctr=1
-        elif p=="d" and x<16 and a[y][x+1]!="|||":
+        elif move=="d" and x<16 and a[y][x+1]!="|||":
             a[y][x]=" "
             x+=2
             ctr=1
-        elif p=="p":
-            t=input("Enter your wall type(h/v) : ")
-            if t=="h":
-                xw=int(input("Enter your mo : "))
-                yw=int(input("Enter your ma : "))
+        elif move=="p":
+            t = input("Enter your wall type (h/v): ")
+            xw = int(input("Enter your mo: "))
+            yw = int(input("Enter your ma: "))
+            if t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!="#" and a[yw*2-2][xw*2]!="|||" and a[yw*2][xw*2]!="|||":
                 a[yw*2-2][xw*2]="|||"
+                a[yw*2][xw*2]="|||"
+                a[yw*2-1][xw*2-1]="#"
                 ply=1
                 w2-=1
                 if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
-                    a[yw*2-2][xw*2]=" | "
+                    a[yw*2-2][xw*2]=" |  "
+                    a[yw*2][xw*2]=" | "
+                    a[yw*2-1][xw*2-1]="+"
                     print("Error:\nboarder is close.")
                     ply=2
                     w2+=1
-            elif t=="v":
-                xw=int(input("Enter your mo : "))
-                yw=int(input("Enter your ma : "))
+            elif t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!="#" and a[yw*2-1][xw*2-2]!="===" and a[yw*2-1][xw*2]!="===":
+                a[yw*2-1][xw*2-1]="#"
                 a[yw*2-1][xw*2-2]="==="
+                a[yw*2-1][xw*2]!="==="
                 ply=1
                 w2-=1
                 if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
-                    a[yw*2-1][xw*2]="---"
+                    a[yw*2-2][xw*2]=" |  "
+                    a[yw*2][xw*2]=" | "
+                    a[yw*2-1][xw*2-1]="+"
                     print("Error:\nboarder is close.")
                     ply=2
                     w2+=1
-        elif p!="n":
+        elif move!="n":
             print("Error:\nplease enter a valid value.")
         if ctr==1:
             a[y][x]="x"
@@ -119,47 +127,53 @@ while p!="n":
             print("Player 2 is winner!")
             break
     else:
-        if p=="w" and f>0 and a[f-1][g-1]!="===":
+        if move=="w" and f>0 and a[f-1][g-1]!="===":
             a[f][g] = " "
             f -= 2
             ctr = 1
-        elif p=="s" and f<16 and a[f+1][g-1]!="===":
+        elif move=="s" and f<16 and a[f+1][g-1]!="===":
             a[f][g] = " "
             f += 2
             ctr = 1
-        elif p=="a" and g>1 and a[f][g-1]!="|||":
+        elif move=="a" and g>1 and a[f][g-1]!="|||":
             a[f][g] = " "
             g -= 2
             ctr = 1
-        elif p=="d" and g<16 and a[f][g+1]!="|||":
+        elif move=="d" and g<16 and a[f][g+1]!="|||":
             a[f][g] = " "
             g += 2
             ctr = 1
-        elif p=="p":
+        elif move=="p":
             t = input("Enter your wall type (h/v): ")
-            if t == "h":
-                xw = int(input("Enter your mo: "))
-                yw = int(input("Enter your ma: "))
-                a[yw * 2 - 2][xw * 2] = "|||"
+            xw = int(input("Enter your mo: "))
+            yw = int(input("Enter your ma: "))
+            if t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!="#" and a[yw*2-2][xw*2]!="|||" and a[yw*2][xw*2]!="|||":
+                a[yw*2-2][xw*2]="|||"
+                a[yw*2][xw*2]="|||"
+                a[yw*2-1][xw*2-1]="#"
                 ply=2
                 w1-=1
                 if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
-                    a[yw * 2 - 2][xw * 2] = " | "
-                    print("Error\nboarder is close.")
-                    ply=1
-                    w1+=1
-            elif t == "v":
-                xw = int(input("Enter your mo: "))
-                yw = int(input("Enter your ma: "))
-                a[yw * 2 - 1][xw * 2 - 2] = "==="
-                ply=2
-                w1-=1
-                if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
-                    a[yw * 2 -1][xw*2-2] = "---"
+                    a[yw*2-2][xw*2]=" |  "
+                    a[yw*2][xw*2]=" | "
+                    a[yw*2-1][xw*2-1]="+"
                     print("Error:\nboarder is close.")
                     ply=1
                     w1+=1
-        elif p != "n":
+            elif t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!="#" and a[yw*2-1][xw*2-2]!="===" and a[yw*2-1][xw*2]!="===":
+                a[yw*2-1][xw*2-1]="#"
+                a[yw*2-1][xw*2-2]="==="
+                a[yw*2-1][xw*2]!="==="
+                ply=2
+                w1-=1
+                if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
+                    a[yw*2-2][xw*2]=" |  "
+                    a[yw*2][xw*2]=" | "
+                    a[yw*2-1][xw*2-1]="+"
+                    print("Error:\nboarder is close.")
+                    ply=1
+                    w1+=1
+        elif move != "n":
             print("Error:\nPlease enter a valid value.")
         if ctr == 1:
             a[f][g] = "o"
