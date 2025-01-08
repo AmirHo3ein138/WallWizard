@@ -199,12 +199,12 @@ while move!="n":
                         ctr=1
         elif move=="p":
             if w2>0:
-                t = input("Enter your wall type (h/v): ")
+                t = input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v): ")
                 xw, yw = map(int,input("Enter the coordinates(x, y): ").split()) 
-                if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_v and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
+                if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                     a[yw*2-2][xw*2]=(" " + wall_v + " ")
                     a[yw*2][xw*2]=(" " + wall_v + " ")
-                    a[yw*2-1][xw*2-1]=hashtag_v
+                    a[yw*2-1][xw*2-1]=hashtag_h
                     ply=1
                     w2-=1
                     clear_console()
@@ -321,7 +321,7 @@ while move!="n":
                 a[y1][x1]=" "
                 x1+=2
                 ctr=1
-            elif x1<13:
+            elif x1<14:
                 if a[y1][x1+3]!=(" " + wall_v + " "):
                     a[y1][x1]=" "
                     x1+=4
@@ -340,12 +340,12 @@ while move!="n":
                         ctr=1
         elif move=="p":
             if w1>0:
-                t = input("Enter your wall type (h/v): ")
+                t = input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v): ")
                 xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
-                if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_v and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
+                if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                     a[yw*2-2][xw*2]=(" " + wall_v + " ")
                     a[yw*2][xw*2]=(" " + wall_v + " ")
-                    a[yw*2-1][xw*2-1]=hashtag_v
+                    a[yw*2-1][xw*2-1]=hashtag_h
                     ply=2
                     w1-=1
                     clear_console()
