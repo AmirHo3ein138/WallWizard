@@ -1,4 +1,5 @@
 from colorama import Fore, Style
+import os
 class ColoredTableCharacters:
     def __init__(self):
         self.reset = Style.RESET_ALL
@@ -22,6 +23,18 @@ hashtag_h = table_chars.plus_between_walls_h
 plus = table_chars.plus_simple
 red_player = table_chars.red_piece
 white_player = table_chars.white_piece
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def print_board(a):
+    for i in range(17):
+        c=""
+        for j in range(17):
+            c+=a[i][j]
+        if i%2==0:
+            c+=a[i][17]
+        print(c)
 
 def dfsFunction(x,y,a,p):
     ky=0
@@ -87,13 +100,6 @@ a[y1][x1]=white_player
 w1=10
 ply=1
 while move!="n":
-    for i in range(17):
-        c=""
-        for j in range(17):
-            c+=a[i][j]
-        if i%2==0:
-            c+=a[i][17]
-        print(c)
     ctr=0
     if ply==2:
         move=input("Enter your move(w, a, s, d or p for place wall) : ")
@@ -222,6 +228,8 @@ while move!="n":
         if ctr==1:
             a[y2][x2]=red_player
             ply=1
+            clear_console()
+            print_board(a)
         if y2==16:
             print("Player 2 is winner!")
             break
@@ -351,6 +359,8 @@ while move!="n":
             print("Error:\nPlease enter a valid value.")
         if ctr == 1:
             a[y1][x1] = white_player
+            clear_console()
+            print_board(a)
             ply=2
         if y1==0:
             print("Player 1 is winner!")
