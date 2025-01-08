@@ -1,20 +1,18 @@
 from colorama import Fore, Style
-# Class for color Shapes
 class ColoredTableCharacters:
     def __init__(self):
         self.reset = Style.RESET_ALL
-
-        # تعریف کاراکترهای جدول با رنگ‌ها
-        self.horizontal_simple = f"{Fore.BLUE}\u2501{self.reset}"  # جدول ساده افقی (آبی)
-        self.vertical_simple = f"{Fore.BLUE}\u2503{self.reset}"    # جدول عمودی ساده (آبی)
-        self.plus_simple = f"{Fore.BLUE}\u254b{self.reset}"        # مثبت‌های ساده بین خطوط جدول (آبی)
+        self.horizontal_simple = f"{Fore.CYAN}\u2501{self.reset}"
+        self.vertical_simple = f"{Fore.CYAN}\u2503{self.reset}"
+        self.plus_simple = f"{Fore.CYAN}\u254b{self.reset}"
         self.plus_between_walls_h = f"{Fore.RED}\u254b{self.reset}"
-        self.plus_between_walls_v = f"{Fore.RED}\u2542{self.reset}" # مثبت‌های بین دو دیوار هشتگ‌ها (آبی)
-        self.vertical_wall = f"{Fore.RED}\u2503{self.reset}"       # دیوار عمودی (قرمز)
-        self.horizontal_wall = f"{Fore.RED}\u2501{self.reset}"  # دیوار افقی (زرد)
+        self.plus_between_walls_v = f"{Fore.RED}\u2542{self.reset}"
+        self.vertical_wall = f"{Fore.RED}\u2503{self.reset}"  
+        self.horizontal_wall = f"{Fore.RED}\u2501{self.reset}"
+        self.white_piece = f"{Fore.WHITE}\u2659{self.reset}"
+        self.red_piece = f"{Fore.RED}\u2659{self.reset}"
 table_chars = ColoredTableCharacters()
 
-# Map Shapes
 normal_h = table_chars.horizontal_simple
 normal_v = table_chars.vertical_simple
 wall_h = table_chars.horizontal_wall
@@ -22,6 +20,8 @@ wall_v = table_chars.vertical_wall
 hashtag_v = table_chars.plus_between_walls_v
 hashtag_h = table_chars.plus_between_walls_h
 plus = table_chars.plus_simple
+red_player = table_chars.red_piece
+white_player = table_chars.white_piece
 
 def dfsFunction(x,y,a,p):
     ky=0
@@ -77,13 +77,13 @@ for i in range(17):
             if j<8:
                 a[i].append(plus)
 move="t"
-x=9
-y=0
-a[y][x]="\u2659"
+x2=9
+y2=0
+a[y2][x2]=red_player
 w2=10
-g=9
-f=16
-a[f][g]="\u265f"
+x1=9
+y1=16
+a[y1][x1]=white_player
 w1=10
 ply=1
 while move!="n":
@@ -97,91 +97,93 @@ while move!="n":
     ctr=0
     if ply==2:
         move=input("Enter your move(w, a, s, d or p for place wall) : ")
-        if move=="w" and y>0 and a[y-1][x-1]!=(3 * wall_h):
-            if a[y-2][x]!="o":
-                a[y][x]=" "
-                y-=2
+        if move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
+            if a[y2-2][x2]!=white_player:
+                a[y2][x2]=" "
+                y2-=2
                 ctr=1
-            elif y>2:
-                if a[y-3][x-1]!=(3 * wall_h):
-                    a[y][x]=" "
-                    y-=4
+            elif y2>2:
+                if a[y2-3][x2-1]!=(3 * wall_h):
+                    a[y2][x2]=" "
+                    y2-=4
                     ctr=1
                 else:
                     move2move=input("Enter your move(a, d) : ")
-                    if move2move=="a" and x>2 and a[y-2][x-1]!=(" " + wall_v + " "):
-                        a[y][x]=" "
-                        y-=2
-                        x-=2
+                    if move2move=="a" and x2>2 and a[y2-2][x2-1]!=(" " + wall_v + " "):
+                        a[y2][x2]=" "
+                        y2-=2
+                        x2-=2
                         ctr=1
-                    elif move2move=="d" and x<16 and a[y-2][x+1]!=(" " + wall_v + " "):
-                        a[y][x]=" "
-                        y-=2
-                        x+=2
-        elif move=="s" and y<16 and a[y+1][x-1]!=(3 * wall_h):
-            if a[y+2][x]!="o":
-                a[y][x]=" "
-                y+=2
+                    elif move2move=="d" and x2<16 and a[y2-2][x2+1]!=(" " + wall_v + " "):
+                        a[y2][x2]=" "
+                        y2-=2
+                        x2+=2
+                        ctr=1
+        elif move=="s" and y2<16 and a[y2+1][x2-1]!=(3 * wall_h):
+            if a[y2+2][x2]!=white_player:
+                a[y2][x2]=" "
+                y2+=2
                 ctr=1
-            elif y<13:
-                if a[y+3][x-1]!=(3 * wall_h):
-                    a[y][x]=" "
-                    y+=4
+            elif y2<13:
+                if a[y2+3][x2-1]!=(3 * wall_h):
+                    a[y2][x2]=" "
+                    y2+=4
                     ctr=1
                 else:
                     move2move=input("Enter your move(a, d) : ")
-                    if move2move=="a" and x>2 and a[y+2][x-1]!=(" " + wall_v + " "):
-                        a[y][x]=" "
-                        y+=2
-                        x-=2
+                    if move2move=="a" and x2>2 and a[y2+2][x2-1]!=(" " + wall_v + " "):
+                        a[y2][x2]=" "
+                        y2+=2
+                        x2-=2
                         ctr=1
-                    elif move2move=="d" and x<16 and a[y+2][x+1]!=(" " + wall_v + " "):
-                        a[y][x]=" "
-                        y+=2
-                        x+=2
-        elif move=="a" and x>1 and a[y][x-1]!=(" " + wall_v + " "):
-            if a[y][x-2]!="o":
-                a[y][x]=" "
-                x-=2
+                    elif move2move=="d" and x2<16 and a[y2+2][x2+1]!=(" " + wall_v + " "):
+                        a[y2][x2]=" "
+                        y2+=2
+                        x2+=2
+                        ctr=1
+        elif move=="a" and x2>1 and a[y2][x2-1]!=(" " + wall_v + " "):
+            if a[y2][x2-2]!=white_player:
+                a[y2][x2]=" "
+                x2-=2
                 ctr=1
-            elif x>2:
-                if a[y][x-3]!=(" " + wall_v + " "):
-                    a[y][x]=" "
-                    x-=4
+            elif x2>2:
+                if a[y2][x2-3]!=(" " + wall_v + " "):
+                    a[y2][x2]=" "
+                    x2-=4
                     ctr=1
                 else:
                     move2move=input("Enter your move(w, s) : ")
-                    if move2move=="w" and y>0 and a[y-1][x-1]!=(3 * wall_h):
-                        a[y][x]=" "
-                        x-=2
-                        y-=2
+                    if move2move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
+                        a[y2][x2]=" "
+                        x2-=2
+                        y2-=2
                         ctr=1
-                    elif move2move=="s" and y<16 and a[y+1][x-1]!=(3 * wall_h):
-                        a[y][x]=" "
-                        y+=2
-                        x-=2
+                    elif move2move=="s" and y2<16 and a[y2+1][x2-1]!=(3 * wall_h):
+                        a[y2][x2]=" "
+                        y2+=2
+                        x2-=2
                         ctr=1
-        elif move=="d" and x<16 and a[y][x+1]!=(" " + wall_v + " "):
-            if a[y][x+2]!="o":
-                a[y][x]=" "
-                x+=2
+        elif move=="d" and x2<16 and a[y2][x2+1]!=(" " + wall_v + " "):
+            if a[y2][x2+2]!=white_player:
+                a[y2][x2]=" "
+                x2+=2
                 ctr=1
-            elif x<13:
-                if a[y][x+3]!=(" " + wall_v + " "):
-                    a[y][x]=" "
-                    x+=4
+            elif x2<13:
+                if a[y2][x2+3]!=(" " + wall_v + " "):
+                    a[y2][x2]=" "
+                    x2+=4
                     ctr=1
                 else:
                     move2move=input("Enter your move(w, s) : ")
-                    if move2move=="w" and y>0 and a[y-1][x-1]!=(3 * wall_h):
-                        a[y][x]=" "
-                        x+=2
-                        y-=2
+                    if move2move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
+                        a[y2][x2]=" "
+                        x2+=2
+                        y2-=2
                         ctr=1
-                    elif move2move=="s" and y<16 and a[y+1][x-1]!=(3 * wall_h):
-                        a[y][x]=" "
-                        y+=2
-                        x+=2
+                    elif move2move=="s" and y2<16 and a[y2+1][x2-1]!=(3 * wall_h):
+                        a[y2][x2]=" "
+                        y2+=2
+                        x2+=2
                         ctr=1
         elif move=="p":
             if w2>0:
@@ -193,123 +195,125 @@ while move!="n":
                     a[yw*2-1][xw*2-1]=hashtag_v
                     ply=1
                     w2-=1
-                    if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
+                    if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-2][xw*2]=(" "+normal_v+" ")
                         a[yw*2][xw*2]=(" "+normal_v+" ")
                         a[yw*2-1][xw*2-1]=plus
                         print("Error:\nboarder is close.")
                         ply=2
                         w2+=1
-                else:
-                    print("Error:\nYou don't have a wall anymore!")
-            elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
-                a[yw*2-1][xw*2-1]=hashtag_h
-                a[yw*2-1][xw*2-2]=(3 * wall_h)
-                a[yw*2-1][xw*2]=(3 * wall_h)
-                ply=1
-                w2-=1
-                if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
-                    a[yw*2-1][xw*2]=(3 * normal_h)
-                    a[yw*2-1][xw*2-2]=(3 * normal_h)
-                    a[yw*2-1][xw*2-1]=plus
-                    print("Error:\nboarder is close.")
-                    ply=2
-                    w2+=1
+                elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
+                    a[yw*2-1][xw*2-1]=hashtag_h
+                    a[yw*2-1][xw*2-2]=(3 * wall_h)
+                    a[yw*2-1][xw*2]=(3 * wall_h)
+                    ply=1
+                    w2-=1
+                    if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
+                        a[yw*2-1][xw*2]=(3 * normal_h)
+                        a[yw*2-1][xw*2-2]=(3 * normal_h)
+                        a[yw*2-1][xw*2-1]=plus
+                        print("Error:\nboarder is close.")
+                        ply=2
+                        w2+=1
+            else:
+                print("Error:\nYou don't have a wall anymore!")
         elif move!="n":
             print("Error:\nplease enter a valid value.")
         if ctr==1:
-            a[y][x]="x"
+            a[y2][x2]=red_player
             ply=1
-        if y==16:
+        if y2==16:
             print("Player 2 is winner!")
             break
     else:
         move=input("Enter your move(w, a, s, d or p for place wall) : ")
-        if move=="w" and f>0 and a[f-1][g-1]!=(3 * wall_h):
-            if a[f-2][g]!="o":
-                a[f][g]=" "
-                f-=2
+        if move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
+            if a[y1-2][x1]!=red_player:
+                a[y1][x1]=" "
+                y1-=2
                 ctr=1
-            elif f>2:
-                if a[f-3][g-1]!=(3 * wall_h):
-                    a[f][g]=" "
-                    f-=4
+            elif y1>2:
+                if a[y1-3][x1-1]!=(3 * wall_h):
+                    a[y1][x1]=" "
+                    y1-=4
                     ctr=1
                 else:
                     move2move=input("Enter four move(a, d) : ")
-                    if move2move=="a" and g>2 and a[f-2][g-1]!=(" " + wall_v + " "):
-                        a[f][g]=" "
-                        f-=2
-                        g-=2
+                    if move2move=="a" and x1>2 and a[y1-2][x1-1]!=(" " + wall_v + " "):
+                        a[y1][x1]=" "
+                        y1-=2
+                        x1-=2
                         ctr=1
-                    elif move2move=="d" and g<16 and a[f-2][g+1]!=(" " + wall_v + " "):
-                        a[f][g]=" "
-                        f-=2
-                        g+=2
-        elif move=="s" and f<16 and a[f+1][g-1]!=(3 * wall_h):
-            if a[f+2][g]!="o":
-                a[f][g]=" "
-                f+=2
+                    elif move2move=="d" and x1<16 and a[y1-2][x1+1]!=(" " + wall_v + " "):
+                        a[y1][x1]=" "
+                        y1-=2
+                        x1+=2
+                        ctr=1
+        elif move=="s" and y1<16 and a[y1+1][x1-1]!=(3 * wall_h):
+            if a[y1+2][x1]!=red_player:
+                a[y1][x1]=" "
+                y1+=2
                 ctr=1
-            elif f<13:
-                if a[f+3][g-1]!=(3 * wall_h):
-                    a[f][g]=" "
-                    f+=4
+            elif y1<13:
+                if a[y1+3][x1-1]!=(3 * wall_h):
+                    a[y1][x1]=" "
+                    y1+=4
                     ctr=1
                 else:
                     move2move=input("Enter four move(a, d) : ")
-                    if move2move=="a" and g>2 and a[f+2][g-1]!=(" " + wall_v + " "):
-                        a[f][g]=" "
-                        f+=2
-                        g-=2
+                    if move2move=="a" and x1>2 and a[y1+2][x1-1]!=(" " + wall_v + " "):
+                        a[y1][x1]=" "
+                        y1+=2
+                        x1-=2
                         ctr=1
-                    elif move2move=="d" and g<16 and a[f+2][g+1]!=(" " + wall_v + " "):
-                        a[f][g]=" "
-                        f+=2
-                        g+=2
-        elif move=="a" and g>1 and a[f][g-1]!=(" " + wall_v + " "):
-            if a[f][g-2]!="o":
-                a[f][g]=" "
-                g-=2
+                    elif move2move=="d" and x1<16 and a[y1+2][x1+1]!=(" " + wall_v + " "):
+                        a[y1][x1]=" "
+                        y1+=2
+                        x1+=2
+                        ctr=1
+        elif move=="a" and x1>1 and a[y1][x1-1]!=(" " + wall_v + " "):
+            if a[y1][x1-2]!=red_player:
+                a[y1][x1]=" "
+                x1-=2
                 ctr=1
-            elif g>2:
-                if a[f][g-3]!=(" " + wall_v + " "):
-                    a[f][g]=" "
-                    g-=4
+            elif x1>2:
+                if a[y1][x1-3]!=(" " + wall_v + " "):
+                    a[y1][x1]=" "
+                    x1-=4
                     ctr=1
                 else:
                     move2move=input("Enter four move(w, s) : ")
-                    if move2move=="w" and f>0 and a[f-1][g-1]!=(3 * wall_h):
-                        a[f][g]=" "
-                        g-=2
-                        f-=2
+                    if move2move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
+                        a[y1][x1]=" "
+                        x1-=2
+                        y1-=2
                         ctr=1
-                    elif move2move=="s" and f<16 and a[f+1][g-1]!=(3 * wall_h):
-                        a[f][g]=" "
-                        f+=2
-                        g-=2
+                    elif move2move=="s" and y1<16 and a[y1+1][x1-1]!=(3 * wall_h):
+                        a[y1][x1]=" "
+                        y1+=2
+                        x1-=2
                         ctr=1
-        elif move=="d" and g<16 and a[f][g+1]!=(" " + wall_v + " "):
-            if a[f][g+2]!="o":
-                a[f][g]=" "
-                g+=2
+        elif move=="d" and x1<16 and a[y1][x1+1]!=(" " + wall_v + " "):
+            if a[y1][x1+2]!=red_player:
+                a[y1][x1]=" "
+                x1+=2
                 ctr=1
-            elif g<13:
-                if a[f][g+3]!=(" " + wall_v + " "):
-                    a[f][g]=" "
-                    g+=4
+            elif x1<13:
+                if a[y1][x1+3]!=(" " + wall_v + " "):
+                    a[y1][x1]=" "
+                    x1+=4
                     ctr=1
                 else:
                     move2move=input("Enter four move(w, s) : ")
-                    if move2move=="w" and f>0 and a[f-1][g-1]!=(3 * wall_h):
-                        a[f][g]=" "
-                        g+=2
-                        f-=2
+                    if move2move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
+                        a[y1][x1]=" "
+                        x1+=2
+                        y1-=2
                         ctr=1
-                    elif move2move=="s" and f<16 and a[f+1][g-1]!=(3 * wall_h):
-                        a[f][g]=" "
-                        f+=2
-                        g+=2
+                    elif move2move=="s" and y1<16 and a[y1+1][x1-1]!=(3 * wall_h):
+                        a[y1][x1]=" "
+                        y1+=2
+                        x1+=2
                         ctr=1
         elif move=="p":
             if w1>0:
@@ -321,7 +325,7 @@ while move!="n":
                     a[yw*2-1][xw*2-1]=hashtag_v
                     ply=2
                     w1-=1
-                    if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
+                    if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-2][xw*2]=(" "+normal_v+" ")
                         a[yw*2][xw*2]=(" "+normal_v+" ")
                         a[yw*2-1][xw*2-1]=plus
@@ -334,7 +338,7 @@ while move!="n":
                     a[yw*2-1][xw*2]=(3 * wall_h)
                     ply=2
                     w1-=1
-                    if dfsFunction(g, f, a, 1) == False or dfsFunction(x, y, a, 2) == False:
+                    if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-1][xw*2]=(3 * normal_h)
                         a[yw*2-1][xw*2-2]=(3 * normal_h)
                         a[yw*2-1][xw*2-1]=plus
@@ -346,8 +350,8 @@ while move!="n":
         elif move != "n":
             print("Error:\nPlease enter a valid value.")
         if ctr == 1:
-            a[f][g] = "o"
+            a[y1][x1] = white_player
             ply=2
-        if f==0:
+        if y1==0:
             print("Player 1 is winner!")
             break
