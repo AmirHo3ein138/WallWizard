@@ -27,7 +27,7 @@ white_player = table_chars.white_piece
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def print_board(a):
+def print_board(a, ply):
     for i in range(17):
         c=""
         for j in range(17):
@@ -35,6 +35,10 @@ def print_board(a):
         if i%2==0:
             c+=a[i][17]
         print(c)
+    if ply == 2:
+        print(f"Red player's turn ({red_player}):")
+    else:
+        print(f"White player's turn ({white_player})")
 
 def dfsFunction(x,y,a,p):
     ky=0
@@ -99,6 +103,8 @@ y1=16
 a[y1][x1]=white_player
 w1=10
 ply=1
+clear_console()
+print_board(a, ply)
 while move!="n":
     ctr=0
     if ply==2:
@@ -194,19 +200,24 @@ while move!="n":
         elif move=="p":
             if w2>0:
                 t = input("Enter your wall type (h/v): ")
-                xw, yw = map(int,input("Enter the coordinates (x, y): ").split()) 
+                xw, yw = map(int,input("Enter the coordinates(x, y): ").split()) 
                 if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_v and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                     a[yw*2-2][xw*2]=(" " + wall_v + " ")
                     a[yw*2][xw*2]=(" " + wall_v + " ")
                     a[yw*2-1][xw*2-1]=hashtag_v
                     ply=1
                     w2-=1
+                    clear_console()
+                    print_board(a, ply)
                     if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-2][xw*2]=(" "+normal_v+" ")
                         a[yw*2][xw*2]=(" "+normal_v+" ")
                         a[yw*2-1][xw*2-1]=plus
-                        print("Error:\nboarder is close.")
+                        clear_console()
                         ply=2
+                        print_board(a, ply)
+                        print("Error:\nboarder is close.")
+                        
                         w2+=1
                 elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                     a[yw*2-1][xw*2-1]=hashtag_h
@@ -214,12 +225,16 @@ while move!="n":
                     a[yw*2-1][xw*2]=(3 * wall_h)
                     ply=1
                     w2-=1
+                    clear_console()
+                    print_board(a, ply)
                     if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-1][xw*2]=(3 * normal_h)
                         a[yw*2-1][xw*2-2]=(3 * normal_h)
                         a[yw*2-1][xw*2-1]=plus
-                        print("Error:\nboarder is close.")
+                        clear_console()
                         ply=2
+                        print_board(a, ply)
+                        print("Error:\nboarder is close.")
                         w2+=1
             else:
                 print("Error:\nYou don't have a wall anymore!")
@@ -229,9 +244,9 @@ while move!="n":
             a[y2][x2]=red_player
             ply=1
             clear_console()
-            print_board(a)
+            print_board(a, ply)
         if y2==16:
-            print("Player 2 is winner!")
+            print("Red player is winner!")
             break
     else:
         move=input("Enter your move(w, a, s, d or p for place wall) : ")
@@ -333,12 +348,16 @@ while move!="n":
                     a[yw*2-1][xw*2-1]=hashtag_v
                     ply=2
                     w1-=1
+                    clear_console()
+                    print_board(a, ply)
                     if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-2][xw*2]=(" "+normal_v+" ")
                         a[yw*2][xw*2]=(" "+normal_v+" ")
                         a[yw*2-1][xw*2-1]=plus
-                        print("Error:\nboarder is close.")
+                        clear_console()
                         ply=1
+                        print_board(a, ply)
+                        print("Error:\nboarder is close.")
                         w1+=1
                 elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                     a[yw*2-1][xw*2-1]=hashtag_h
@@ -346,12 +365,16 @@ while move!="n":
                     a[yw*2-1][xw*2]=(3 * wall_h)
                     ply=2
                     w1-=1
+                    clear_console()
+                    print_board(a, ply)
                     if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
                         a[yw*2-1][xw*2]=(3 * normal_h)
                         a[yw*2-1][xw*2-2]=(3 * normal_h)
                         a[yw*2-1][xw*2-1]=plus
-                        print("Error:\nboarder is close.")
+                        clear_console()
                         ply=1
+                        print_board(a, ply)
+                        print("Error:\nboarder is close.")
                         w1+=1
             else:
                 print("Error:\nYou don't have a wall anymore!")
@@ -360,8 +383,8 @@ while move!="n":
         if ctr == 1:
             a[y1][x1] = white_player
             clear_console()
-            print_board(a)
             ply=2
+            print_board(a, ply)
         if y1==0:
-            print("Player 1 is winner!")
+            print("White player is winner!")
             break
