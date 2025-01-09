@@ -28,9 +28,12 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def print_board(a, ply):
+    col_numbers = "  " + "  ".join(f"{i:2}" for i in range(1,9))
+    print(col_numbers)
+
     for i in range(17):
         c=""
-        for j in range(17):
+        for j in range(18):
             c+=a[i][j]
         if i%2==0:
             c+=a[i][17]
@@ -80,6 +83,7 @@ def dfsFunction(x,y,a,p):
     else:
         return(True)
 a=[]
+counter = 1
 for i in range(17):
     a.append([])
     if i%2==0:
@@ -93,6 +97,8 @@ for i in range(17):
             a[i].append(3 * normal_h)
             if j<8:
                 a[i].append(plus)
+    counter += 0.5
+    a[i].append(f' {int(counter-1)}')
 move="t"
 x2=9
 y2=0
