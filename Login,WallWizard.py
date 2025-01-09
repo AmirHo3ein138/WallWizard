@@ -18,16 +18,21 @@ def validate_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_regex, email) is not None
 
-def load_users():
-    try:
-        with open("users.json", "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
+def create_player_file(username, user_data):
+    players_folder = "players"
+    if not os.path.exists(players_folder):
+        os.makedirs(players_folder)
 
-def save_users(users):
-    with open("users.json", "w") as file:
-        json.dump(users, file, indent=4)
+    player_file_path = os.path.join(players_folder, f"{username}.json")
+    with open(player_file_path, "w") as file:
+        json.dump(user_data, file, indent=4)
+
+def load_user(username):
+    player_file_path = os.path.join("players", f"{username}.json")
+    if os.path.exists(player_file_path):
+        with open(player_file_path, "r") as file:
+            return json.load(file)
+    return None
 
 def display_login_table():
     table = Table(title="[bold magenta]==| Login Menu |==[/bold magenta]")
@@ -55,16 +60,15 @@ def display_signin_table():
     table.add_row("Email", "Valid email address")
     table.add_row("Password", "Password must be at least 8 characters long")
     console.print(table)
-    
+
 def display_main_menu_table():
     table = Table(title="[bold cyan]Main Menu[/bold cyan]", show_header=True, header_style="bold yellow", padding=(0, 2))
     table.add_column("Option", style="bold cyan", justify="center")
     table.add_column("Action", style="bold green", justify="center")
     table.add_row("1", "Start New Game")
-    table.add_row("2", "Continue Game")
-    table.add_row("3", "View Game History")
-    table.add_row("4", "View Leaderboard")
-    table.add_row("5", "Exit")
+    table.add_row("2", "View Game History")
+    table.add_row("3", "View Leaderboard")
+    table.add_row("4", "Exit")
     console.print(table)
 
 def get_password(prompt):
@@ -85,27 +89,22 @@ def get_password(prompt):
     return password
 
 def register_user():
-    users = load_users()
-
     while True:
         display_signin_table()
         username = Prompt.ask("[bold blue]Enter username (or b to go back)[/bold blue]", default="", show_default=False)
         if username == 'b':
             clear_screen()
-            return
-        if username in users:
-            console.print("Error: Username already exists.", style="bold underline red", justify="center")
+            return 
+        if load_user(username):
+            console.print("Error: Username already exists.", style="bold underline red")
             continue
 
         email = Prompt.ask("[bold blue]Enter email (or b to go back)[/bold blue]", default="", show_default=False)
         if email == 'b':
             clear_screen()
-            return
+            return 
         if not validate_email(email):
-            console.print("Error: Invalid email format.", style="bold underline red", justify="center")
-            continue
-        if any(user['email'] == email for user in users.values()):
-            console.print("Error: Email already exists.", style="bold underline red", justify="center")
+            console.print("Error: Invalid email format.", style="bold underline red")
             continue
 
         while True:
@@ -124,14 +123,14 @@ def register_user():
             break
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_id = str(uuid.uuid4())
-        users[user_id] = {
+        user_data = {
             "username": username,
             "password": hashed_password.decode('utf-8'),
             "email": email
         }
 
-        save_users(users)
+        create_player_file(username, user_data)
+
         console.print("Everything is set to play!", style="bold underline green", justify="center")
         Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
         clear_screen()
@@ -139,24 +138,19 @@ def register_user():
 
 def login_user():
     display_login_table()
-    users = load_users()
 
     while True:
         username = Prompt.ask("[bold magenta]Enter username (or b to go back)[/bold magenta]", default="", show_default=False)
         if username == 'b':
             clear_screen()
             return
-        user = None
-        for user_id, data in users.items():
-            if data["username"] == username:
-                user = data
-                break
 
-        if user is None:
+        user = load_user(username)
+        if not user:
             console.print("Error: Username does not exist.", style="bold underline red", justify="center")
             continue
 
-        password = get_password("Enter password (or b to go back): ")
+        password = get_password("[bold magenta]Enter password (or b to go back): [/bold magenta]")
         if password == 'b':
             clear_screen()
             return
