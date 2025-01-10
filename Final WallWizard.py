@@ -30,14 +30,19 @@ def clear_console():
 def print_board(a, ply):
     col_numbers = "  " + "  ".join(f"{i:2}" for i in range(1,9))
     print(col_numbers)
-
+    end_line_number = 1
     for i in range(17):
-        c=""
-        for j in range(18):
-            c+=a[i][j]
+        board=""
+        for j in range(17):
+            board+=a[i][j]
         if i%2==0:
-            c+=a[i][17]
-        print(c)
+            board+=a[i][17]
+            print(board)
+        else:
+            
+            for i in range(1):
+                end_line_number +=1
+            print(board, end_line_number-1)
     if ply == 2:
         print(f"Red player's turn ({red_player}):")
     else:
