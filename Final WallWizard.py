@@ -191,7 +191,7 @@ while move!="n":
                 a[y2][x2]=" "
                 x2+=2
                 ctr=1
-            elif x2<13:
+            elif x2<14:
                 if a[y2][x2+3]!=(" " + wall_v + " "):
                     a[y2][x2]=" "
                     x2+=4
