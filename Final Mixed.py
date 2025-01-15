@@ -469,15 +469,6 @@ def display_login_table():
     table.add_row("Password", "Password must be at least 8 characters long")
     console.print(table)
 
-
-    table = Table(title="[bold cyan]==| Entry Menu |==[/bold cyan]", show_header=True, header_style="bold cyan", padding=(0, 2))
-    table.add_column("Option", style="bold cyan", justify="center")
-    table.add_column("Description", style="bold cyan", justify="center")
-    table.add_row("1", "SignIn")
-    table.add_row("2", "Login")
-    table.add_row("3", "Exit")
-    console.print(table)
-
 def display_signin_table():
     table = Table(title="[bold blue]==|Terms|==[/bold blue]", show_header=True, header_style="bold blue", padding=(0, 2))
     table.add_column("Field", style="bold blue", justify="center")
