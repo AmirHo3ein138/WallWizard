@@ -1,4 +1,3 @@
-import uuid
 import bcrypt
 import re
 import json
@@ -50,7 +49,7 @@ def create_player_file(username, user_data):
     with open(player_file_path, "w") as file:
         json.dump(user_data, file, indent=4)
 
-def load_user(username):
+def load_user1(username):
     player_file_path = os.path.join("players", f"{username}.json")
     if os.path.exists(player_file_path):
         with open(player_file_path, "r") as file:
@@ -65,6 +64,13 @@ def load_user(username):
     table.add_row("2", "Login")
     table.add_row("3", "Exit")
     console.print(table)
+
+def load_user2(username):
+    player_file_path = os.path.join("players", f"{username}.json")
+    if os.path.exists(player_file_path):
+        with open(player_file_path, "r") as file:
+            return json.load(file)
+    return None
 
 def print_board(a, ply):
     col_numbers = "  " + "  ".join(f"{i:2}" for i in range(1,9))
@@ -486,9 +492,8 @@ def display_main_menu_table():
     table.add_column("Option", style="bold cyan", justify="center")
     table.add_column("Action", style="bold green", justify="center")
     table.add_row("1", "Start New Game")
-    table.add_row("2", "View Game History")
-    table.add_row("3", "View Leaderboard")
-    table.add_row("4", "Exit")
+    table.add_row("2", "View Leaderboard")
+    table.add_row("3", "Exit")
     console.print(table)
 
 def get_password(prompt):
@@ -515,7 +520,7 @@ def register_user():
         if username == 'b':
             clear_screen()
             return 
-        if load_user(username):
+        if load_user1(username):
             console.print("Error: Username already exists.", style="bold underline red")
             continue
 
@@ -556,7 +561,7 @@ def register_user():
         clear_screen()
         break
 
-def login_user():
+def login_user1():
     display_login_table()
 
     while True:
@@ -565,7 +570,35 @@ def login_user():
             clear_screen()
             return
 
-        user = load_user(username)
+        user = load_user1(username)
+        if not user:
+            console.print("Error: Username does not exist.", style="bold underline red", justify="center")
+            continue
+
+        password = get_password("[bold magenta]Enter password (or b to go back): [/bold magenta]")
+        if password == 'b':
+            clear_screen()
+            return
+        if not bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
+            console.print("Error: Incorrect password.", style="bold underline red", justify="center")
+            continue
+
+        console.print("Login successful!", style="bold underline green", justify="center")
+        Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
+        clear_screen()
+        main_menu(username)
+        break
+
+def login_user2():
+    display_login_table()
+
+    while True:
+        username = Prompt.ask("[bold magenta]Enter username (or b to go back)[/bold magenta]", default="", show_default=False)
+        if username == 'b':
+            clear_screen()
+            return
+
+        user = load_user2(username)
         if not user:
             console.print("Error: Username does not exist.", style="bold underline red", justify="center")
             continue
@@ -593,18 +626,19 @@ def main_menu(username):
         if choice == '1':
             console.print("Starting new game...", style="bold green")
             clear_screen()
+            # login_user1()
             start_game()
         elif choice == '2':
-            console.print("Viewing game history...", style="bold green")
-        elif choice == '3':
             console.print("Viewing leaderboard...", style="bold green")
-        elif choice == '4':
+        elif choice == '3':
             break
         else:
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
 
 def main():
+
     while True:
+        
         clear_screen()
         display_entry_table()
 
@@ -614,7 +648,7 @@ def main():
             register_user()
         elif choice == '2':
             clear_screen()
-            login_user()
+            login_user1()
         elif choice == '3':
             break
         else:
