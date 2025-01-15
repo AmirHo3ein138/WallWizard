@@ -35,9 +35,9 @@ console = Console()
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
-    console.print("[bold white]In the name of GOD.[/bold white]")
-    console.print("[italic white]made by RASM[italic white]")
-    print('----------------------------------')
+    console.print("[bold white]     In the name of GOD[/bold white]")
+    console.print("        made by RASM",style="bold red")
+    print('----------------------------')
 
 
 def validate_email(email):
@@ -651,4 +651,3 @@ def main():
             Prompt.ask("[bold yellow]Press Enter to continue...[/bold yellow]")
 if __name__ == "__main__":
     main()
-    
