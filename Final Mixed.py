@@ -39,7 +39,6 @@ def clear_screen():
     console.print("        made by RASM",style="bold red")
     print('----------------------------')
 
-
 def validate_email(email):
     email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(email_regex, email) is not None
@@ -59,15 +58,6 @@ def load_user1(username):
         with open(player_file_path, "r") as file:
             return json.load(file)
     return None
-
-
-    table = Table(title="[bold cyan]==| Entry Menu |==[/bold cyan]", show_header=True, header_style="bold cyan", padding=(0, 2))
-    table.add_column("Option", style="bold cyan", justify="center")
-    table.add_column("Description", style="bold cyan", justify="center")
-    table.add_row("1", "SignIn")
-    table.add_row("2", "Login")
-    table.add_row("3", "Exit")
-    console.print(table)
 
 def load_user2(username):
     player_file_path = os.path.join("players", f"{username}.json")
