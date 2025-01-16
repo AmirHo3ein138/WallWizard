@@ -219,6 +219,8 @@ def start_game():
                             y2+=2
                             x2+=2
                             ctr=1
+                        else:
+                            console.print("Invalid Input!!!", style="bold red")
             elif move=="a" and x2>1 and a[y2][x2-1]!=(" " + wall_v + " "):
                 if a[y2][x2-2]!=white_player:
                     a[y2][x2]=" "
@@ -263,45 +265,55 @@ def start_game():
                             y2+=2
                             x2+=2
                             ctr=1
+                        else:
+                            console.print("Invalid move!!!", style="bold red")
             elif move=="p":
                 if w2>0:
-                    t = input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v): ")
-                    xw, yw = map(int,input("Enter the coordinates(x, y): ").split()) 
-                    if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
-                        a[yw*2-2][xw*2]=(" " + wall_v + " ")
-                        a[yw*2][xw*2]=(" " + wall_v + " ")
-                        a[yw*2-1][xw*2-1]=hashtag_h
-                        ply=1
-                        w2-=1
-                        clear_screen()
-                        print_board(a, ply)
-                        if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
-                            a[yw*2-2][xw*2]=(" "+normal_v+" ")
-                            a[yw*2][xw*2]=(" "+normal_v+" ")
-                            a[yw*2-1][xw*2-1]=plus
+                    t = input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v/b for back): ")
+                    if t=="v" :
+                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
+                        if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
+                            a[yw*2-2][xw*2]=(" " + wall_v + " ")
+                            a[yw*2][xw*2]=(" " + wall_v + " ")
+                            a[yw*2-1][xw*2-1]=hashtag_h
+                            ply=1
+                            w2-=1
                             clear_screen()
-                            ply=2
                             print_board(a, ply)
-                            print("Error:\nboarder is close.")
+                            if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
+                                a[yw*2-2][xw*2]=(" "+normal_v+" ")
+                                a[yw*2][xw*2]=(" "+normal_v+" ")
+                                a[yw*2-1][xw*2-1]=plus
+                                clear_screen()
+                                ply=2
+                                print_board(a, ply)
+                                print("Error:\nboarder is close.")
                             
                             w2+=1
-                    elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
-                        a[yw*2-1][xw*2-1]=hashtag_h
-                        a[yw*2-1][xw*2-2]=(3 * wall_h)
-                        a[yw*2-1][xw*2]=(3 * wall_h)
-                        ply=1
-                        w2-=1
-                        clear_screen()
-                        print_board(a, ply)
-                        if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
-                            a[yw*2-1][xw*2]=(3 * normal_h)
-                            a[yw*2-1][xw*2-2]=(3 * normal_h)
-                            a[yw*2-1][xw*2-1]=plus
+                    elif t=="h" :
+                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
+                        if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
+                            a[yw*2-1][xw*2-1]=hashtag_h
+                            a[yw*2-1][xw*2-2]=(3 * wall_h)
+                            a[yw*2-1][xw*2]=(3 * wall_h)
+                            ply=1
+                            w2-=1
                             clear_screen()
-                            ply=2
                             print_board(a, ply)
-                            print("Error:\nboarder is close.")
-                            w2+=1
+                            if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
+                                a[yw*2-1][xw*2]=(3 * normal_h)
+                                a[yw*2-1][xw*2-2]=(3 * normal_h)
+                                a[yw*2-1][xw*2-1]=plus
+                                clear_screen()
+                                ply=2
+                                print_board(a, ply)
+                                print("Error:\nboarder is close.")
+                                w2+=1
+                    elif t=="b":
+                        return
+                    else:
+                        console.print("Invalied move!!!", style="bold red")
+                        continue
                 else:
                     print("Error:\nYou don't have a wall anymore!")
             elif move!="n":
@@ -406,42 +418,50 @@ def start_game():
                             ctr=1
             elif move=="p":
                 if w1>0:
-                    t = input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v): ")
-                    xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
-                    if t=="v" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
-                        a[yw*2-2][xw*2]=(" " + wall_v + " ")
-                        a[yw*2][xw*2]=(" " + wall_v + " ")
-                        a[yw*2-1][xw*2-1]=hashtag_h
-                        ply=2
-                        w1-=1
-                        clear_screen()
-                        print_board(a, ply)
-                        if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
-                            a[yw*2-2][xw*2]=(" "+normal_v+" ")
-                            a[yw*2][xw*2]=(" "+normal_v+" ")
-                            a[yw*2-1][xw*2-1]=plus
+                    t = input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v/b for back): ")
+                    if t=="v" :
+                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
+                        if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
+                            a[yw*2-2][xw*2]=(" " + wall_v + " ")
+                            a[yw*2][xw*2]=(" " + wall_v + " ")
+                            a[yw*2-1][xw*2-1]=hashtag_h
+                            ply=2
+                            w1-=1
                             clear_screen()
-                            ply=1
                             print_board(a, ply)
-                            print("Error:\nboarder is close.")
-                            w1+=1
-                    elif t=="h" and xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
-                        a[yw*2-1][xw*2-1]=hashtag_h
-                        a[yw*2-1][xw*2-2]=(3 * wall_h)
-                        a[yw*2-1][xw*2]=(3 * wall_h)
-                        ply=2
-                        w1-=1
-                        clear_screen()
-                        print_board(a, ply)
-                        if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
-                            a[yw*2-1][xw*2]=(3 * normal_h)
-                            a[yw*2-1][xw*2-2]=(3 * normal_h)
-                            a[yw*2-1][xw*2-1]=plus
+                            if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
+                                a[yw*2-2][xw*2]=(" "+normal_v+" ")
+                                a[yw*2][xw*2]=(" "+normal_v+" ")
+                                a[yw*2-1][xw*2-1]=plus
+                                clear_screen()
+                                ply=1
+                                print_board(a, ply)
+                                print("Error:\nboarder is close.")
+                                w1+=1
+                    elif t=="h" :
+                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
+                        if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
+                            a[yw*2-1][xw*2-1]=hashtag_h
+                            a[yw*2-1][xw*2-2]=(3 * wall_h)
+                            a[yw*2-1][xw*2]=(3 * wall_h)
+                            ply=2
+                            w1-=1
                             clear_screen()
-                            ply=1
                             print_board(a, ply)
-                            print("Error:\nboarder is close.")
-                            w1+=1
+                            if dfsFunction(x1, y1, a, 1) == False or dfsFunction(x2, y2, a, 2) == False:
+                                a[yw*2-1][xw*2]=(3 * normal_h)
+                                a[yw*2-1][xw*2-2]=(3 * normal_h)
+                                a[yw*2-1][xw*2-1]=plus
+                                clear_screen()
+                                ply=1
+                                print_board(a, ply)
+                                print("Error:\nboarder is close.")
+                                w1+=1
+                    elif t=="b":
+                        return
+                    else:
+                        console.print("Invalied move!!!", style="bold red")
+                        continue
                 else:
                     print("Error:\nYou don't have a wall anymore!")
             elif move != "n":
