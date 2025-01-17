@@ -99,6 +99,53 @@ def print_board(a, ply):
     else:
         print(f"White player's turn ({white_player})")
 
+def get_leaderboard_data():
+    players_folder = "players"
+    leaderboard = []
+
+    if os.path.exists(players_folder):
+        for filename in os.listdir(players_folder):
+            if filename.endswith(".json"):
+                player_file_path = os.path.join(players_folder, filename)
+                with open(player_file_path, "r") as file:
+                    player_data = json.load(file)
+                    leaderboard.append({
+                        "username": player_data.get("username", "Unknown"),
+                        "wins": player_data.get("wins", 0),
+                        "losses": player_data.get("losses", 0)
+                    })
+
+
+    leaderboard.sort(key=lambda x: (-x["wins"], x["losses"]))
+    return leaderboard
+
+def view_leaderboard():
+    leaderboard = get_leaderboard_data()
+
+    if not leaderboard:
+        console.print("No players found! Leaderboard is empty.", style="bold red", justify="center")
+        Prompt.ask("[bold yellow]Press Enter to return to the main menu...[/bold yellow]")
+        return
+
+    
+    table = Table(title="[bold green]==| Leaderboard |==[/bold green]", show_header=True, header_style="bold cyan")
+    table.add_column("Rank", justify="center")
+    table.add_column("Username", justify="center")
+    table.add_column("Wins", justify="center")
+    table.add_column("Losses", justify="center")
+
+    for rank, player in enumerate(leaderboard, start=1):
+        table.add_row(
+            str(rank),
+            player["username"],
+            str(player["wins"]),
+            str(player["losses"])
+        )
+
+    console.print(table)
+    Prompt.ask("[bold yellow]Press Enter to return to the main menu...[/bold yellow]")
+
+
 def dfsFunction(x,y,a,p):
     table_chars = ColoredTableCharacters()
 
@@ -329,7 +376,7 @@ def start_game():
             if y2==16:
                     red_username = [user for user, piece in player_piece.items() if piece == "red" ][0]
                     white_username = [user for user, piece in player_piece.items() if piece == "white"][0]
-                    console.print(f"🎉 Congratulations, {red_username}! You have won the game as the {table_chars.red_piece} piece! 🎉", style="bold green", justify="center")
+                    console.print(f"🎉 Congratulations, {red_username}! You have won the game 🎉", style="bold green", justify="center")
                     console.print(f"Better luck next time, {white_username}.", style="bold yellow", justify="center")
                     update_player_stats(winner=red_username, loser=white_username)
                     #Prompt.ask("[bold cyan]Press Enter to return to the main menu...[/bold cyan]")
@@ -491,7 +538,7 @@ def start_game():
             if y1==0:
                 red_username = [user for user, piece in player_piece.items() if piece == "red"][0]
                 white_username = [user for user, piece in player_piece.items() if piece == "white"][0]
-                console.print(f"🎉 Congratulations, {white_username}! You have won the game as the {table_chars.white_piece} piece! 🎉", style="bold green", justify="center")
+                console.print(f"🎉 Congratulations, {white_username}! You have won the game 🎉", style="bold green", justify="center")
                 console.print(f"Better luck next time, {red_username}.", style="bold yellow", justify="center")
                 update_player_stats(winner=white_username, loser=red_username)
                 #Prompt.ask("[bold cyan]Press Enter to return to the main menu...[/bold cyan]")
@@ -691,6 +738,7 @@ def main_menu(username):
             login_user2()
         elif choice == '2':
             console.print("Viewing leaderboard...", style="bold green")
+            view_leaderboard()
         elif choice == '3':
             break
         else:
