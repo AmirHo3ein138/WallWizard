@@ -1,2 +1,1 @@
-Akharin file bazi **Wall_wizard_final.py** hastesh 
-bray test ono run konid
+Latest Version for test is Qouridor v2.0.py
