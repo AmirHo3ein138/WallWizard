@@ -293,15 +293,7 @@ def start_game(game_state=None):
         a[y1][x1] = white_player
     
     move="t"
-    '''x2=9
-        y2=0
-        a[y2][x2]=red_player
-        w2=10
-        x1=9
-        y1=16
-        a[y1][x1]=white_player
-        w1=10
-        ply=1'''
+    
     clear_screen()
     print_board(a, ply)
     while move!="n":
