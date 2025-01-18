@@ -283,12 +283,12 @@ def start_game(game_state=None):
         w2, w1 = game_state["red_walls"], game_state["white_walls"]  # Walls remaining
         ply = game_state["current_turn"]  # Current turn: 1 for red, 2 for white
     else:
-    # Initialize a new game
-        a = initialize_board()  # Function to set up the board (your existing logic)
-        x2, y2 = 9, 0  # Red player's starting position
-        x1, y1 = 9, 16  # White player's starting position
-        w2, w1 = 10, 10  # Each player has 10 walls initially
-        ply = 1  # Current turn: 1 for red, 2 for white
+    
+        a = initialize_board()  
+        x2, y2 = 9, 0  
+        x1, y1 = 9, 16  
+        w2, w1 = 10, 10  
+        ply = 1  
         a[y2][x2] = red_player
         a[y1][x1] = white_player
     
@@ -468,13 +468,11 @@ def start_game(game_state=None):
                     console.print(f"🎉 Congratulations, {red_username}! You have won the game 🎉", style="bold green", justify="center")
                     console.print(f"Better luck next time, {white_username}.", style="bold yellow", justify="center")
                     update_player_stats(winner=red_username, loser=white_username)
-                    #Prompt.ask("[bold cyan]Press Enter to return to the main menu...[/bold cyan]")
+                    
                     safe_input("Press Enter to return to the mein menu...")
                     break
             
-            '''if y2==16:
-                print("Red player is winner!")
-                break'''
+            
         else:
             move=safe_input("Enter your move(w, a, s, d or p for place wall|/[n] to exit|[save] to save the game):")
             if move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
@@ -566,7 +564,7 @@ def start_game(game_state=None):
                             x1+=2
                             ctr=1
             elif move == "save":
-                # Save the game state
+                
                 game_state = {
                     "board": a,
                     "red_position": (x2, y2),
@@ -634,8 +632,7 @@ def start_game(game_state=None):
                 ply=2
                 print_board(a, ply)
             
-                #red_username = [user for user, piece in player_piece.items() if piece == "red" ][0]
-                #white_username = [user for user, piece in player_piece.items() if piece == "white"][0]
+                
                 
             if y1==0:
                 red_username = [user for user, piece in player_piece.items() if piece == "red"][0]
@@ -648,9 +645,6 @@ def start_game(game_state=None):
                 break
 
             
-            '''if y1==0:
-                print("White player is winner!")
-                break'''
 
 def display_entry_table():
     table = Table(title="[bold cyan]==| Entry Menu |==[/bold cyan]", show_header=True, header_style="bold cyan", padding=(0, 2))
@@ -835,7 +829,7 @@ def main_menu(username):
         if choice == '1' and len(logged_in_user) == 2:
             console.print("Starting new game...", style="bold green")
             clear_screen()
-            # login_user1()
+            
             start_game()
         elif choice == "1" and len(logged_in_user) < 2 :
             console.print("[bold red] Second user must log in![/bold red]")
