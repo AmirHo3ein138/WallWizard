@@ -1,3 +1,4 @@
+import sys
 import bcrypt
 import uuid
 import time
@@ -9,6 +10,15 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
 from colorama import Fore, Style
+import sys
+
+def safe_input(prompt=""):
+    try:
+        return input(prompt)
+    except RuntimeError:
+        
+        sys.stdout.write(prompt)
+        return sys.stdin.readline().strip()
 
 class ColoredTableCharacters:
     def __init__(self):
@@ -296,7 +306,7 @@ def start_game(game_state=None):
     while move!="n":
         ctr=0
         if ply==2:
-            move=input("Enter your move(w, a, s, d or p for place wall|n to exit|[save] to save the game):")
+            move=safe_input("Enter your move(w, a, s, d or p for place wall|n to exit|[save] to save the game):")
             if move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
                 if a[y2-2][x2]!=white_player:
                     a[y2][x2]=" "
@@ -308,7 +318,7 @@ def start_game(game_state=None):
                         y2-=4
                         ctr=1
                     else:
-                        move2move=input("Enter your move(a, d) : ")
+                        move2move=safe_input("Enter your move(a, d) : ")
                         if move2move=="a" and x2>2 and a[y2-2][x2-1]!=(" " + wall_v + " "):
                             a[y2][x2]=" "
                             y2-=2
@@ -343,7 +353,7 @@ def start_game(game_state=None):
                         y2+=4
                         ctr=1
                     else:
-                        move2move=input("Enter your move(a, d) : ")
+                        move2move=safe_input("Enter your move(a, d) : ")
                         if move2move=="a" and x2>2 and a[y2+2][x2-1]!=(" " + wall_v + " "):
                             a[y2][x2]=" "
                             y2+=2
@@ -367,7 +377,7 @@ def start_game(game_state=None):
                         x2-=4
                         ctr=1
                     else:
-                        move2move=input("Enter your move(w, s) : ")
+                        move2move=safe_input("Enter your move(w, s) : ")
                         if move2move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
                             a[y2][x2]=" "
                             x2-=2
@@ -389,7 +399,7 @@ def start_game(game_state=None):
                         x2+=4
                         ctr=1
                     else:
-                        move2move=input("Enter your move(w, s) : ")
+                        move2move=safe_input("Enter your move(w, s) : ")
                         if move2move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
                             a[y2][x2]=" "
                             x2+=2
@@ -404,9 +414,9 @@ def start_game(game_state=None):
                             console.print("Invalid move!!!", style="bold red")
             elif move=="p":
                 if w2>0:
-                    t = input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v/b for back): ")
+                    t = safe_input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v/b for back): ")
                     if t=="v" :
-                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
+                        xw, yw = map(int,safe_input("Enter the coordinates(x, y): "))
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                             a[yw*2-2][xw*2]=(" " + wall_v + " ")
                             a[yw*2][xw*2]=(" " + wall_v + " ")
@@ -426,7 +436,7 @@ def start_game(game_state=None):
                             
                             w2+=1
                     elif t=="h" :
-                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
+                        xw, yw = map(int,safe_input("Enter the coordinates(x, y): "))
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                             a[yw*2-1][xw*2-1]=hashtag_h
                             a[yw*2-1][xw*2-2]=(3 * wall_h)
@@ -466,14 +476,14 @@ def start_game(game_state=None):
                     console.print(f"Better luck next time, {white_username}.", style="bold yellow", justify="center")
                     update_player_stats(winner=red_username, loser=white_username)
                     #Prompt.ask("[bold cyan]Press Enter to return to the main menu...[/bold cyan]")
-                    input("Press Enter to return to the mein menu...")
+                    safe_input("Press Enter to return to the mein menu...")
                     break
             
             '''if y2==16:
                 print("Red player is winner!")
                 break'''
         else:
-            move=input("Enter your move(w, a, s, d or p for place wall|/[n] to exit|[save] to save the game):")
+            move=safe_input("Enter your move(w, a, s, d or p for place wall|/[n] to exit|[save] to save the game):")
             if move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
                 if a[y1-2][x1]!=red_player:
                     a[y1][x1]=" "
@@ -485,7 +495,7 @@ def start_game(game_state=None):
                         y1-=4
                         ctr=1
                     else:
-                        move2move=input("Enter four move(a, d) : ")
+                        move2move=safe_input("Enter four move(a, d) : ")
                         if move2move=="a" and x1>2 and a[y1-2][x1-1]!=(" " + wall_v + " "):
                             a[y1][x1]=" "
                             y1-=2
@@ -507,7 +517,7 @@ def start_game(game_state=None):
                         y1+=4
                         ctr=1
                     else:
-                        move2move=input("Enter four move(a, d) : ")
+                        move2move=safe_input("Enter four move(a, d) : ")
                         if move2move=="a" and x1>2 and a[y1+2][x1-1]!=(" " + wall_v + " "):
                             a[y1][x1]=" "
                             y1+=2
@@ -529,7 +539,7 @@ def start_game(game_state=None):
                         x1-=4
                         ctr=1
                     else:
-                        move2move=input("Enter four move(w, s) : ")
+                        move2move=safe_input("Enter four move(w, s) : ")
                         if move2move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
                             a[y1][x1]=" "
                             x1-=2
@@ -551,7 +561,7 @@ def start_game(game_state=None):
                         x1+=4
                         ctr=1
                     else:
-                        move2move=input("Enter four move(w, s) : ")
+                        move2move=safe_input("Enter four move(w, s) : ")
                         if move2move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
                             a[y1][x1]=" "
                             x1+=2
@@ -577,9 +587,9 @@ def start_game(game_state=None):
                 continue  
             elif move=="p":
                 if w1>0:
-                    t = input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v/b for back): ")
+                    t = safe_input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v/b for back): ")
                     if t=="v" :
-                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
+                        xw, yw = map(int,safe_input("Enter the coordinates (x, y): "))
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                             a[yw*2-2][xw*2]=(" " + wall_v + " ")
                             a[yw*2][xw*2]=(" " + wall_v + " ")
@@ -598,7 +608,7 @@ def start_game(game_state=None):
                                 print("Error:\nboarder is close.")
                                 w1+=1
                     elif t=="h" :
-                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
+                        xw, yw = map(int,safe_input("Enter the coordinates (x, y): "))
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                             a[yw*2-1][xw*2-1]=hashtag_h
                             a[yw*2-1][xw*2-2]=(3 * wall_h)
@@ -641,7 +651,7 @@ def start_game(game_state=None):
                 console.print(f"Better luck next time, {red_username}.", style="bold yellow", justify="center")
                 update_player_stats(winner=white_username, loser=red_username)
                 #Prompt.ask("[bold cyan]Press Enter to return to the main menu...[/bold cyan]")
-                input("Press Enter to return to the main menu...")
+                safe_input("Press Enter to return to the main menu...")
                 break
 
             
