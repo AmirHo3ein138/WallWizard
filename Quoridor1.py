@@ -1,4 +1,6 @@
 import bcrypt
+import uuid
+import time
 import re
 import json
 import os
@@ -187,9 +189,23 @@ def dfsFunction(x,y,a,p):
     if ky==0:
         return(False)
     else:
-        return(True)       
+        return(True) 
 
-def start_game():
+
+def save_game(game_state):
+    save_folder = "saved_games"
+    if not os.path.exists(save_folder):
+        os.makedirs(save_folder)
+
+    
+    save_filename = f"{save_folder}/{int(time.time())}_{uuid.uuid4().hex}.json"
+
+    
+    with open(save_filename, "w") as file:
+        json.dump(game_state, file, indent=4)
+
+    console.print(f"Game saved successfully! Save file: {save_filename}", style="bold green", justify="center")
+def initialize_board():
     ky=0
     a=[]
     counter = 1
@@ -208,6 +224,63 @@ def start_game():
                     a[i].append(plus)
         counter += 0.5
         a[i].append(f' {int(counter-1)}')
+    return a
+
+def load_game():
+    save_folder = "saved_games"
+    if not os.path.exists(save_folder):
+        console.print("No saved games found!", style="bold red", justify="center")
+        return None
+
+    
+    save_files = [f for f in os.listdir(save_folder) if f.endswith(".json")]
+    if not save_files:
+        console.print("No saved games found!", style="bold red", justify="center")
+        return None
+
+    console.print("Available saved games:", style="bold cyan")
+    for idx, save_file in enumerate(save_files, start=1):
+        console.print(f"{idx}. {save_file}", style="bold yellow")
+
+    
+    choice = Prompt.ask("[bold cyan]Enter the number of the save file to load (or 'b' to go back): [/bold cyan]", default="", show_default=False)
+    if choice.lower() == 'b':
+        return None
+
+    try:
+        choice = int(choice)
+        if 1 <= choice <= len(save_files):
+            save_file_path = os.path.join(save_folder, save_files[choice - 1])
+            with open(save_file_path, "r") as file:
+                game_state = json.load(file)
+            console.print("Game loaded successfully!", style="bold green", justify="center")
+            return game_state
+        else:
+            console.print("Invalid choice. Returning to the menu.", style="bold red", justify="center")
+    except ValueError:
+        console.print("Invalid input. Returning to the menu.", style="bold red", justify="center")
+    
+    return None
+
+
+def start_game(game_state=None):
+    global player_piece
+    if game_state:
+    # Load saved game state
+        a = game_state["board"]  # The game board
+        x2, y2 = game_state["red_position"]  # Red player's position
+        x1, y1 = game_state["white_position"]  # White player's position
+        w2, w1 = game_state["red_walls"], game_state["white_walls"]  # Walls remaining
+        ply = game_state["current_turn"]  # Current turn: 1 for red, 2 for white
+    else:
+    # Initialize a new game
+        a = initialize_board()  # Function to set up the board (your existing logic)
+        x2, y2 = 9, 0  # Red player's starting position
+        x1, y1 = 9, 16  # White player's starting position
+        w2, w1 = 10, 10  # Each player has 10 walls initially
+        ply = 1  # Current turn: 1 for red, 2 for white
+
+    
     move="t"
     x2=9
     y2=0
@@ -223,7 +296,7 @@ def start_game():
     while move!="n":
         ctr=0
         if ply==2:
-            move=input("Enter your move(w, a, s, d or p for place wall) : ")
+            move=input("Enter your move(w, a, s, d or p for place wall|n to exit|[save] to save the game):")
             if move=="w" and y2>0 and a[y2-1][x2-1]!=(3 * wall_h):
                 if a[y2-2][x2]!=white_player:
                     a[y2][x2]=" "
@@ -246,6 +319,19 @@ def start_game():
                             y2-=2
                             x2+=2
                             ctr=1
+            elif move == "save":
+               
+                game_state = {
+                    "board": a,
+                    "red_position": (x2, y2),
+                    "white_position": (x1, y1),
+                    "red_walls": w2,
+                    "white_walls": w1,
+                    "current_turn": ply,
+                }
+                save_game(game_state)  
+                console.print("Game saved! You can resume it later.", style="bold green", justify="center")
+                continue  
             elif move=="s" and y2<16 and a[y2+1][x2-1]!=(3 * wall_h):
                 if a[y2+2][x2]!=white_player:
                     a[y2][x2]=" "
@@ -387,7 +473,7 @@ def start_game():
                 print("Red player is winner!")
                 break'''
         else:
-            move=input("Enter your move(w, a, s, d or p for place wall) : ")
+            move=input("Enter your move(w, a, s, d or p for place wall|/[n] to exit|[save] to save the game):")
             if move=="w" and y1>0 and a[y1-1][x1-1]!=(3 * wall_h):
                 if a[y1-2][x1]!=red_player:
                     a[y1][x1]=" "
@@ -476,6 +562,19 @@ def start_game():
                             y1+=2
                             x1+=2
                             ctr=1
+            elif move == "save":
+                # Save the game state
+                game_state = {
+                    "board": a,
+                    "red_position": (x2, y2),
+                    "white_position": (x1, y1),
+                    "red_walls": w2,
+                    "white_walls": w1,
+                    "current_turn": ply,
+                }
+                save_game(game_state)  
+                console.print("Game saved! You can resume it later.", style="bold green", justify="center")
+                continue  
             elif move=="p":
                 if w1>0:
                     t = input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v/b for back): ")
@@ -583,7 +682,8 @@ def display_main_menu_table():
     table.add_column("Action", style="bold green", justify="center")
     table.add_row("1", "Start New Game")
     table.add_row("2", "View Leaderboard")
-    table.add_row("3", "Exit")
+    table.add_row("3", "saved games")
+    table.add_row("4", "Exit")
     console.print(table)
 
 def get_password(prompt):
@@ -723,6 +823,7 @@ def login_user2():
         break
 
 def main_menu(username):
+    
     while True:
         clear_screen()
         display_main_menu_table()
@@ -739,7 +840,12 @@ def main_menu(username):
         elif choice == '2':
             console.print("Viewing leaderboard...", style="bold green")
             view_leaderboard()
-        elif choice == '3':
+        elif choice == '3' :
+            console.print("Loading saved game...", style="bold green")
+            game_state = load_game()
+            if game_state:
+                start_game(game_state)
+        elif choice == '4':
             break
         else:
             console.print("[bold red]Invalid choice. Please try again.[/bold red]", justify="center")
