@@ -289,18 +289,19 @@ def start_game(game_state=None):
         x1, y1 = 9, 16  # White player's starting position
         w2, w1 = 10, 10  # Each player has 10 walls initially
         ply = 1  # Current turn: 1 for red, 2 for white
-
+        a[y2][x2] = red_player
+        a[y1][x1] = white_player
     
     move="t"
-    x2=9
-    y2=0
-    a[y2][x2]=red_player
-    w2=10
-    x1=9
-    y1=16
-    a[y1][x1]=white_player
-    w1=10
-    ply=1
+    '''x2=9
+        y2=0
+        a[y2][x2]=red_player
+        w2=10
+        x1=9
+        y1=16
+        a[y1][x1]=white_player
+        w1=10
+        ply=1'''
     clear_screen()
     print_board(a, ply)
     while move!="n":
@@ -416,7 +417,7 @@ def start_game(game_state=None):
                 if w2>0:
                     t = safe_input("You have "+str(w2)+" wall(s)\nEnter your wall type (h/v/b for back): ")
                     if t=="v" :
-                        xw, yw = map(int,safe_input("Enter the coordinates(x, y): "))
+                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                             a[yw*2-2][xw*2]=(" " + wall_v + " ")
                             a[yw*2][xw*2]=(" " + wall_v + " ")
@@ -436,7 +437,7 @@ def start_game(game_state=None):
                             
                             w2+=1
                     elif t=="h" :
-                        xw, yw = map(int,safe_input("Enter the coordinates(x, y): "))
+                        xw, yw = map(int,input("Enter the coordinates(x, y): ").split())
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                             a[yw*2-1][xw*2-1]=hashtag_h
                             a[yw*2-1][xw*2-2]=(3 * wall_h)
@@ -589,7 +590,7 @@ def start_game(game_state=None):
                 if w1>0:
                     t = safe_input("You have "+str(w1)+" wall(s)\nEnter your wall type (h/v/b for back): ")
                     if t=="v" :
-                        xw, yw = map(int,safe_input("Enter the coordinates (x, y): "))
+                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-2][xw*2]!=(" " + wall_v + " ") and a[yw*2][xw*2]!=(" " + wall_v + " "):
                             a[yw*2-2][xw*2]=(" " + wall_v + " ")
                             a[yw*2][xw*2]=(" " + wall_v + " ")
@@ -608,7 +609,7 @@ def start_game(game_state=None):
                                 print("Error:\nboarder is close.")
                                 w1+=1
                     elif t=="h" :
-                        xw, yw = map(int,safe_input("Enter the coordinates (x, y): "))
+                        xw, yw = map(int,input("Enter the coordinates (x, y): ").split())
                         if xw<9 and yw<9 and xw>0 and yw>0 and a[yw*2-1][xw*2-1]!=hashtag_h and a[yw*2-1][xw*2-2]!=(3 * wall_h) and a[yw*2-1][xw*2]!=(3 * wall_h):
                             a[yw*2-1][xw*2-1]=hashtag_h
                             a[yw*2-1][xw*2-2]=(3 * wall_h)
