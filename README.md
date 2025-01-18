@@ -1,1 +1,2 @@
-Dostan Aziz hatman berid nahve kar ba **github** ro yad begirid ta betonim ason tar karo pish bebarim
+Akharin file bazi Wall_wizard_final.py hastesh 
+bray test ono run konid
