@@ -1,1 +1,1 @@
-Latest Version for test is Qouridor v2.0.py
+Latest Version for test is Qouridor v1.2.py
